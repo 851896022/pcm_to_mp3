@@ -2,6 +2,7 @@
 #include <QApplication>
 #include <QDebug>
 #include <QDir>
+
 QString name;
 int port;
 QString baseDir;
@@ -63,10 +64,10 @@ void setDebugOutput(const QString &rawTargetFilePath_, const bool &argDateFlag_)
     class HelperClass
     {
     public:
-        static void messageHandler(QtMsgType type, const QMessageLogContext &, const QString &message_)
+        static void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message_)
         {
             QString message;
-
+            QString context_info = QString("File:(%1) Line:(%2)").arg(QString(context.file)).arg(context.line);
             switch ( type )
             {
                 case QtDebugMsg:
@@ -115,7 +116,8 @@ void setDebugOutput(const QString &rawTargetFilePath_, const bool &argDateFlag_)
             file.open( QIODevice::WriteOnly | QIODevice::Append );
 
             QTextStream textStream( &file );
-            textStream << QDateTime::currentDateTime().toString( "yyyy-MM-dd hh:mm:ss" ) << ": " << message << "\r\n";
+            textStream << QDateTime::currentDateTime().toString( "yyyy-MM-dd hh:mm:ss" ) << ": " <<context_info<<"->"<< message << "\r\n";
+
         }
     };
 
