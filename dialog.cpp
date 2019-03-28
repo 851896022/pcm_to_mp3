@@ -20,7 +20,7 @@ dialog::dialog(QObject *parent) : QObject(parent)
     udpSocket=new QUdpSocket;
     connect(udpSocket,SIGNAL(readyRead()),this,SLOT(OnReceive()));
     //===================================
-    settings_t *mp3set=new settings_t;
+    mp3set=new settings_t;
     mp3set->channels=EC_MONO;
     mp3set->abr_bitrate=BR_32kbps;
     mp3set->cbr_bitrate=BR_32kbps;
@@ -84,7 +84,7 @@ void dialog::onWholeMinute(int min)//整分钟，修改文件名
     //新建文件夹
     QDateTime currentTime = QDateTime::currentDateTime();
 
-    nowDir=baseDir+"/"+currentTime.toString("yyyy-MM-dd");
+    nowDir=baseDir+"/"+currentTime.toString("yyyy-MM-dd/hh时");
     QDir *temp = new QDir;
     if(!(temp->exists(nowDir)))
     {
@@ -93,8 +93,8 @@ void dialog::onWholeMinute(int min)//整分钟，修改文件名
 
     filename=nowDir;
     filename+="/";
-    filename+=(name+currentTime.toString("-yyyy年MM月dd日"));
-    filename+=hh+"时"+mm+"分";
+    filename+=(name+currentTime.toString("-yyyy年MM月dd日hh时mm分"));
+    //filename+=hh+"时"+mm+"分";
     filename+=".mp3";
     QString tmp;
     if(state) tmp+="working ";
@@ -131,7 +131,7 @@ void dialog::onWholeMinute(int min)//整分钟，修改文件名
 void dialog::onWholeSecond(int sec)//整秒钟
 {
     //qDebug()<<preState<<state;
-    if(preState==2)
+    if(preState==2&&false)
     {
 
         QString hh,mm,ss;
@@ -162,7 +162,22 @@ void dialog::onWholeSecond(int sec)//整秒钟
         QFile *file = new QFile(filename);
         if(file->open(QIODevice:: Append))
         {
-            file->write(mp3buff.data(),mp3buff.count());
+            int writeSize=file->write(mp3buff.data(),mp3buff.count());
+            if(writeSize<5)
+            {
+
+                if(udpSocket)
+                {
+                    delete mp3code;
+                    mp3code=new lameHelper(*mp3set);
+                    disconnect(udpSocket,SIGNAL(readyRead()),this,SLOT(OnReceive()));
+                    udpSocket->deleteLater();
+                    udpSocket=new QUdpSocket;
+                    connect(udpSocket,SIGNAL(readyRead()),this,SLOT(OnReceive()));
+
+                }
+                qDebug()<<name<<"reboot socket and mp3code";
+            }
             file->flush();
             file->close();
         }
@@ -183,13 +198,11 @@ void dialog::OnReceive()
     unsigned char mp3code_output[1153]={0};
     size_t mp3code_done=0;
 
-    if(udpSocket->pendingDatagramSize()>0)
+    while(udpSocket->bytesAvailable())
     {
 
 
         realsize=udpSocket->readDatagram((char*)ch, 65536);
-
-
         mp3code->encode((short int *)ch,realsize/2,mp3code_output,1153,&mp3code_done);
         mp3buff.append((char*)mp3code_output,mp3code_done);
 

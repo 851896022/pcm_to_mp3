@@ -22,7 +22,7 @@ class dialog : public QObject
 public:
     explicit dialog(QObject *parent = 0);
     ~dialog();
-    QUdpSocket *udpSocket;
+    QUdpSocket *udpSocket=NULL;
     lameHelper *mp3code;
     short int * input_pcm;
     QString filename;
@@ -32,6 +32,7 @@ public:
     bool state;
     int preState;
     QByteArray mp3buff;
+    settings_t *mp3set;
     //=======================
     int saveDay=3650;
 public slots:
