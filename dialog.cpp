@@ -83,13 +83,22 @@ void dialog::onWholeMinute(int min)//整分钟，修改文件名
     mm=QString::number(min%60);
     //新建文件夹
     QDateTime currentTime = QDateTime::currentDateTime();
-
+    {
+        QString tmpDir=baseDir+"/"+currentTime.toString("yyyy-MM-dd");
+        QDir *temp = new QDir;
+        if(!(temp->exists(tmpDir)))
+        {
+            temp->mkdir(tmpDir);
+        }
+        delete temp;
+    }
     nowDir=baseDir+"/"+currentTime.toString("yyyy-MM-dd/hh时");
     QDir *temp = new QDir;
     if(!(temp->exists(nowDir)))
     {
         temp->mkdir(nowDir);
     }
+    delete temp;
 
     filename=nowDir;
     filename+="/";
