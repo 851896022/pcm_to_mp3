@@ -2,7 +2,7 @@
 #include <QApplication>
 #include <QDebug>
 #include <QDir>
-
+#include <QProcess>
 QString name;
 int port;
 QString baseDir;
@@ -50,7 +50,26 @@ int main(int argc, char *argv[])
     dialog w;
 
     //w.show();
-    return a.exec();
+
+    int e = a.exec();
+
+    if(e == 777)
+
+    {
+        QStringList list;
+        QString a= QString(argv[1]);
+        QString b= QString(argv[2]);
+        QString c= QString(argv[3]);
+        list<<a<<b<<c;
+       QProcess::startDetached(qApp->applicationFilePath(), list);
+
+       qDebug()<<"重启"<<list;
+       return 0;
+
+    }
+
+    return e;
+    //return a.exec();
 }
 //日志生成
 void setDebugOutput(const QString &rawTargetFilePath_, const bool &argDateFlag_)

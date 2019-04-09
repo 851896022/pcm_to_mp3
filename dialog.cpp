@@ -168,13 +168,15 @@ void dialog::onWholeSecond(int sec)//整秒钟
     //ui->lineEdit->setText("no data");
     if(state&&((sec%10)==0))
     {
+
         QFile *file = new QFile(filename);
         if(file->open(QIODevice:: Append))
         {
             int writeSize=file->write(mp3buff.data(),mp3buff.count());
             if(writeSize<5)
             {
-
+                qDebug()<<name<<"reboot socket and mp3code";
+                qApp->exit(777);
                 if(udpSocket)
                 {
                     delete mp3code;
@@ -185,7 +187,7 @@ void dialog::onWholeSecond(int sec)//整秒钟
                     connect(udpSocket,SIGNAL(readyRead()),this,SLOT(OnReceive()));
 
                 }
-                qDebug()<<name<<"reboot socket and mp3code";
+
             }
             file->flush();
             file->close();
