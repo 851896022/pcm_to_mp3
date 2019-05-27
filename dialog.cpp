@@ -14,6 +14,7 @@ QString info;
 extern QString baseDir;
 void clearFiles(const QString &folderFullPath);
 void clearFolder(const QString &folderFullPath);
+
 dialog::dialog(QObject *parent) : QObject(parent)
 {
     //ui->setupUi(this);

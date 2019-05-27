@@ -8,7 +8,7 @@ QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = pcm_to_mp3
+TARGET = pcm_to_mp3_32ch
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -45,3 +45,4 @@ LIBS+= E:\myfile\FRH\Software\DGN_AC32_decode\pcm_to_mp3\lib\libmp3lame.lib
 
 DISTFILES += \
     lib/libmp3lame.lib
+DESTDIR         = bin

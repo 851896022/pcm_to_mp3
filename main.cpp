@@ -33,6 +33,33 @@ int main(int argc, char *argv[])
         name="ch0";
         baseDir="E:/mp3";
     }
+    qDebug()<<name;
+    QString chS=name;
+    chS.remove(0,2);
+    chS.chop(chS.count()-3);
+    int chI=chS.toInt();
+    if(chI==17||chI==18||chI==35||chI==36)
+    {
+        return 888;
+    }
+    if(chI>16)
+    {
+        chI-=2;
+    }
+    chS="ch"+QString("%1").arg((chI),3,10,QLatin1Char('0'));
+    name.remove(0,5);
+
+    if(name.count()>0)
+    {
+        name=chS+"-"+name;
+    }
+    else
+    {
+        name=chS;
+    }
+
+
+
     baseDir+="/"+name;
    QDir *temp = new QDir;
    bool exist = temp->exists(baseDir);
