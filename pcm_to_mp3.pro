@@ -41,7 +41,7 @@ FORMS += \
 
 #RC_FILE=main.rc
 
-LIBS+= E:\myfile\FRH\Software\DGN_AC32_decode\pcm_to_mp3\lib\libmp3lame.lib
+LIBS+= C:\Users\furunhao\Documents\FRH\Software\DGN_AC32_decode\pcm_to_mp3\lib\libmp3lame.lib
 
 DISTFILES += \
     lib/libmp3lame.lib
